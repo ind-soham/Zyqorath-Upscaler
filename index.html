@@ -19,7 +19,7 @@
             margin: 0;
         }
         h2 { 
-            color: #00ffcc; /* Cyberpunk/AI accent color */
+            color: #00ffcc; 
             font-size: 2.5rem;
             margin-bottom: 5px;
         }
@@ -37,10 +37,20 @@
             font-weight: bold;
             border-radius: 6px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: all 0.3s ease;
         }
         button:disabled { background-color: #444; color: #888; cursor: not-allowed; }
-        button:hover:not(:disabled) { background-color: #00ccaa; }
+        button:hover:not(:disabled) { background-color: #00ccaa; transform: scale(1.05); }
+
+        /* Special styling for the download button */
+        #downloadBtn {
+            display: none; /* Hidden until processing is done */
+            margin-top: 15px;
+            background-color: #ff007f; /* A cool neon pink accent */
+            color: white;
+            width: 100%;
+        }
+        #downloadBtn:hover { background-color: #cc0066; }
 
         #status { 
             margin-top: 20px; 
@@ -61,6 +71,9 @@
             padding: 20px; 
             border-radius: 10px; 
             box-shadow: 0 4px 15px rgba(0,0,0,0.5); 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         h3 { margin-top: 0; color: #eeeeee; }
         img { 
@@ -92,25 +105,25 @@
         <div class="img-box">
             <h3>Zyqorath Output</h3>
             <img id="upscaledImg" alt="Upscaled Image">
+            <button id="downloadBtn">Download Enhanced Image</button>
         </div>
     </div>
 
     <script>
         const imageInput = document.getElementById('imageInput');
         const upscaleBtn = document.getElementById('upscaleBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
         const originalImg = document.getElementById('originalImg');
         const upscaledImg = document.getElementById('upscaledImg');
         const statusText = document.getElementById('status');
 
         let upscaler;
 
-        // Initialize the AI model
         window.onload = () => {
             upscaler = new Upscaler();
             statusText.innerText = "System Ready: Awaiting image input.";
         };
 
-        // Handle image upload
         imageInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (file) {
@@ -118,7 +131,11 @@
                 reader.onload = (event) => {
                     originalImg.src = event.target.result;
                     originalImg.style.display = 'block';
-                    upscaledImg.style.display = 'none'; // Hide old result if uploading a new one
+                    
+                    // Reset the output side when a new image is uploaded
+                    upscaledImg.style.display = 'none'; 
+                    downloadBtn.style.display = 'none';
+                    
                     upscaleBtn.disabled = false;
                     statusText.innerText = "Target acquired. Ready to enhance.";
                 };
@@ -126,7 +143,6 @@
             }
         });
 
-        // Run Zyqorath Upscaler
         upscaleBtn.addEventListener('click', async () => {
             statusText.innerText = "Zyqorath is processing... Please hold.";
             upscaleBtn.disabled = true;
@@ -136,6 +152,10 @@
                 
                 upscaledImg.src = upscaledSrc;
                 upscaledImg.style.display = 'block';
+                
+                // Show the download button!
+                downloadBtn.style.display = 'block';
+                
                 statusText.innerText = "Enhancement complete!";
             } catch (error) {
                 console.error(error);
@@ -143,6 +163,16 @@
             } finally {
                 upscaleBtn.disabled = false;
             }
+        });
+
+        // Handle the Download Button click
+        downloadBtn.addEventListener('click', () => {
+            const link = document.createElement('a');
+            link.href = upscaledImg.src;
+            link.download = 'zyqorath-enhanced.png'; // The name of the file it saves as
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         });
     </script>
 </body>
