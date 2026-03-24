@@ -18,71 +18,39 @@
             padding: 40px 20px; 
             margin: 0;
         }
-        h2 { 
-            color: #00ffcc; 
-            font-size: 2.5rem;
-            margin-bottom: 5px;
-        }
+        h2 { color: #00ffcc; font-size: 2.5rem; margin-bottom: 5px; }
         p { color: #aaaaaa; margin-bottom: 30px; }
         
         .upload-section { margin: 20px 0; }
         input[type="file"] { margin-bottom: 15px; color: #fff; }
         
         button {
-            background-color: #00ffcc;
-            color: #121212;
-            border: none;
-            padding: 12px 24px;
-            font-size: 16px;
-            font-weight: bold;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.3s ease;
+            background-color: #00ffcc; color: #121212; border: none;
+            padding: 12px 24px; font-size: 16px; font-weight: bold;
+            border-radius: 6px; cursor: pointer; transition: all 0.3s ease;
         }
         button:disabled { background-color: #444; color: #888; cursor: not-allowed; }
         button:hover:not(:disabled) { background-color: #00ccaa; transform: scale(1.05); }
 
-        /* Special styling for the download button */
         #downloadBtn {
-            display: none; /* Hidden until processing is done */
-            margin-top: 15px;
-            background-color: #ff007f; /* A cool neon pink accent */
-            color: white;
-            width: 100%;
+            display: none; margin-top: 15px; background-color: #ff007f; 
+            color: white; width: 100%;
         }
         #downloadBtn:hover { background-color: #cc0066; }
 
-        #status { 
-            margin-top: 20px; 
-            font-weight: bold; 
-            color: #00ffcc; 
-            padding: 10px;
-        }
+        #status { margin-top: 20px; font-weight: bold; color: #00ffcc; padding: 10px; }
 
         .image-container { 
-            display: flex; 
-            justify-content: center; 
-            flex-wrap: wrap; 
-            gap: 30px; 
-            margin-top: 40px; 
+            display: flex; justify-content: center; flex-wrap: wrap; 
+            gap: 30px; margin-top: 40px; 
         }
         .img-box { 
-            background: #1e1e1e; 
-            padding: 20px; 
-            border-radius: 10px; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5); 
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            background: #1e1e1e; padding: 20px; border-radius: 10px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5); display: flex;
+            flex-direction: column; align-items: center;
         }
         h3 { margin-top: 0; color: #eeeeee; }
-        img { 
-            max-width: 100%; 
-            width: 300px; 
-            border-radius: 6px; 
-            display: none; 
-            margin-top: 10px; 
-        }
+        img { max-width: 100%; width: 300px; border-radius: 6px; display: none; margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -109,71 +77,6 @@
         </div>
     </div>
 
-    <script>
-        const imageInput = document.getElementById('imageInput');
-        const upscaleBtn = document.getElementById('upscaleBtn');
-        const downloadBtn = document.getElementById('downloadBtn');
-        const originalImg = document.getElementById('originalImg');
-        const upscaledImg = document.getElementById('upscaledImg');
-        const statusText = document.getElementById('status');
-
-        let upscaler;
-
-        window.onload = () => {
-            upscaler = new Upscaler();
-            statusText.innerText = "System Ready: Awaiting image input.";
-        };
-
-        imageInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    originalImg.src = event.target.result;
-                    originalImg.style.display = 'block';
-                    
-                    // Reset the output side when a new image is uploaded
-                    upscaledImg.style.display = 'none'; 
-                    downloadBtn.style.display = 'none';
-                    
-                    upscaleBtn.disabled = false;
-                    statusText.innerText = "Target acquired. Ready to enhance.";
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-
-        upscaleBtn.addEventListener('click', async () => {
-            statusText.innerText = "Zyqorath is processing... Please hold.";
-            upscaleBtn.disabled = true;
-
-            try {
-                const upscaledSrc = await upscaler.upscale(originalImg);
-                
-                upscaledImg.src = upscaledSrc;
-                upscaledImg.style.display = 'block';
-                
-                // Show the download button!
-                downloadBtn.style.display = 'block';
-                
-                statusText.innerText = "Enhancement complete!";
-            } catch (error) {
-                console.error(error);
-                statusText.innerText = "Error: Processing failed.";
-            } finally {
-                upscaleBtn.disabled = false;
-            }
-        });
-
-        // Handle the Download Button click
-        downloadBtn.addEventListener('click', () => {
-            const link = document.createElement('a');
-            link.href = upscaledImg.src;
-            link.download = 'zyqorath-enhanced.png'; // The name of the file it saves as
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        });
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
