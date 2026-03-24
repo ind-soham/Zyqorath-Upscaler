@@ -7,10 +7,10 @@ const statusText = document.getElementById('status');
 
 let upscaler;
 
-// Initialize the AI model with the Default Weights
+// Initialize the AI model with the high-quality ESRGAN Thick model
 window.onload = () => {
     upscaler = new Upscaler({
-        model: DefaultUpscalerJSModel,
+        model: ESRGANThick2x, // Using the heavy-duty model now!
     });
     statusText.innerText = "System Ready: Awaiting image input.";
 };
