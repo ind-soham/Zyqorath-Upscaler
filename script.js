@@ -7,9 +7,11 @@ const statusText = document.getElementById('status');
 
 let upscaler;
 
-// Initialize the AI model
+// Initialize the AI model with the Default Weights
 window.onload = () => {
-    upscaler = new Upscaler();
+    upscaler = new Upscaler({
+        model: DefaultUpscalerJSModel,
+    });
     statusText.innerText = "System Ready: Awaiting image input.";
 };
 
@@ -38,7 +40,7 @@ upscaleBtn.addEventListener('click', async () => {
     upscaleBtn.disabled = true;
 
     try {
-        // I added the patchSize fix here in case you try to upload large images!
+        // Using patchSize to prevent memory crashes on large images
         const upscaledSrc = await upscaler.upscale(originalImg, {
             patchSize: 64,
             padding: 2
